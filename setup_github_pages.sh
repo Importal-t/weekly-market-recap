@@ -19,7 +19,7 @@ if [ -z "$GH_TOKEN" ]; then
   echo "  then save it:  echo 'GH_TOKEN=ghp_xxx' > ~/Desktop/Claude_Projects/MarketRecaps/.env"
   exit 1
 fi
-GH_USER="Tianyiliao"
+GH_USER="importal-t"
 REPO="weekly-market-recap"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
