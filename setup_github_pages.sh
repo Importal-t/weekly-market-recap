@@ -113,7 +113,7 @@ PAGES_URL=$(echo "$PAGES_RESPONSE" | python3 -c "import sys,json; d=json.load(sy
 
 if [ -z "$PAGES_URL" ]; then
   # Pages might already be enabled
-  PAGES_URL="https://${GH_USER,,}.github.io/$REPO"
+  PAGES_URL="https://$(echo "$GH_USER" | tr A-Z a-z).github.io/$REPO"
   echo "   → Pages may already be enabled (or takes a moment to activate)"
 fi
 
@@ -121,7 +121,7 @@ echo ""
 echo "─────────────────────────────────────────────"
 echo "✅ All done!"
 echo ""
-echo "  🌐 Public URL:  https://${GH_USER,,}.github.io/$REPO"
+echo "  🌐 Public URL:  https://$(echo "$GH_USER" | tr A-Z a-z).github.io/$REPO"
 echo "  📁 Repo:        $REPO_URL"
 echo ""
 echo "  ⚠️  GitHub Pages can take 1–2 minutes to go live."
@@ -131,4 +131,4 @@ echo "────────────────────────�
 echo ""
 
 # ── Save the public URL for the scheduled task ─────────────
-echo "https://${GH_USER,,}.github.io/$REPO" > .github_pages_url
+echo "https://$(echo "$GH_USER" | tr A-Z a-z).github.io/$REPO" > .github_pages_url

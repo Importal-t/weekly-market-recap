@@ -32,4 +32,4 @@ git diff --cached --quiet && echo "Nothing new to push" && exit 0
 git commit -m "📈 Market recap: $(date +'%Y-%m-%d')"
 git push origin main
 
-echo "✓ Pushed to https://${GH_USER,,}.github.io/$REPO"
+echo "✓ Pushed to https://$(echo "$GH_USER" | tr A-Z a-z).github.io/$REPO"
