@@ -7,10 +7,16 @@
 
 set -e
 
+# Auto-load .env if token not already set
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "$GH_TOKEN" ] && [ -f "$SCRIPT_DIR/.env" ]; then
+  source "$SCRIPT_DIR/.env"
+fi
+
 if [ -z "$GH_TOKEN" ]; then
-  echo "✗ GH_TOKEN env var not set."
+  echo "✗ GH_TOKEN not set."
   echo "  Create a token at https://github.com/settings/tokens (repo scope)"
-  echo "  then run:  export GH_TOKEN=ghp_xxx   (or put it in a local .env file and 'source .env')"
+  echo "  then save it:  echo 'GH_TOKEN=ghp_xxx' > ~/Desktop/Claude_Projects/MarketRecaps/.env"
   exit 1
 fi
 GH_USER="Tianyiliao"

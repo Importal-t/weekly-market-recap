@@ -5,8 +5,14 @@
 #  generating the new HTML file. Safe to run manually too.
 # ─────────────────────────────────────────────────────────────
 
+# Auto-load .env if token not already set
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "$GH_TOKEN" ] && [ -f "$SCRIPT_DIR/.env" ]; then
+  source "$SCRIPT_DIR/.env"
+fi
+
 if [ -z "$GH_TOKEN" ]; then
-  echo "✗ GH_TOKEN env var not set. Run 'source .env' (or export GH_TOKEN=ghp_xxx) first."
+  echo "✗ GH_TOKEN not set. Add it to ~/Desktop/Claude_Projects/MarketRecaps/.env"
   exit 1
 fi
 GH_USER="Tianyiliao"

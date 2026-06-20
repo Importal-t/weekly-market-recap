@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Sector Deep Dive — Upstream to Downstream</title>
+<style>
+  :root {
+    --c0: #7c3aed; /* Equipment */
+    --c1: #2563eb; /* Foundry */
+    --c2: #0891b2; /* Memory */
+    --c3: #0d9488; /* Packaging */
+    --c4: #059669; /* AI Chips */
+    --c5: #65a30d; /* Networking */
+    --c6: #d97706; /* Power/Cooling */
+    --c7: #dc2626; /* Cloud/DC */
+    --c8: #db2777; /* Foundation Models */
+    --c9: #9333ea; /* Apps */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    padding: 24px 16px 60px;
+    min-height: 100vh;
+  }
+  .page-header {
+    max-width: 1100px;
+    margin: 0 auto 28px;
+  }
+  .page-header h1 { font-size: 20px; font-weight: 700; color: #0f172a; }
+  .page-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+  .legend-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+  }
+  .legend-chip {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: #475569;
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 20px; padding: 3px 10px;
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .watchlist-legend {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: #1d4ed8; font-weight: 600;
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 20px; padding: 3px 10px;
+  }
+
+  /* Main layout */
+  .ecosystem {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Tier */
+  .tier {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+  }
+  .tier-label {
+    width: 140px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 16px 14px 0;
+    border-right: 2px solid #e2e8f0;
+    position: relative;
+  }
+  .tier-label .tier-name {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .tier-label .tier-desc {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .tier-label .tier-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+  }
+  .tier-arrow {
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  /* Companies area */
+  .tier-body {
+    flex: 1;
+    padding: 14px 0 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tier-desc-text {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+  .companies-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  /* Company chip */
+  .company {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    position: relative;
+    background: #fff;
+    color: #334155;
+    border-color: #e2e8f0;
+  }
+  .company:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  .company.watchlist {
+    font-weight: 700;
+    border-width: 2px;
+  }
+  .company .wl-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .company .ticker-tag {
+    font-size: 10px;
+    opacity: 0.65;
+    font-weight: 500;
+  }
+
+  /* Connector between tiers */
+  .tier-connector {
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 60px;
+    height: 22px;
+    position: relative;
+  }
+  .tier-connector::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #e2e8f0, #e2e8f0);
+  }
+  .connector-label {
+    margin-left: 10px;
+    font-size: 10px;
+    color: #cbd5e1;
+    font-style: italic;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    max-width: 240px;
+    line-height: 1.6;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip .tt-ticker { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .tooltip .tt-wl { color: #60a5fa; font-size: 10px; font-weight: 600; margin-bottom: 4px; }
+  .tooltip .tt-desc { color: #94a3b8; }
+
+  /* Flow lines SVG overlay */
+  .flow-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    max-width: 1100px;
+    margin: 20px auto 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: none;
+  }
+  .detail-panel.visible { display: block; }
+  .detail-panel .dp-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .dp-close {
+    margin-left: auto; background: none; border: none;
+    color: #94a3b8; cursor: pointer; font-size: 18px; line-height: 1;
+  }
+  .dp-name { font-size: 17px; font-weight: 700; color: #0f172a; }
+  .dp-ticker { font-size: 12px; color: #64748b; }
+  .dp-tier-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .dp-body { font-size: 13px; color: #475569; line-height: 1.7; }
+  .dp-links { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .dp-link-chip {
+    font-size: 11px; font-weight: 600; color: #2563eb;
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 5px; padding: 4px 10px; cursor: pointer;
+  }
+
+  /* Highlight selected */
+  .company.selected {
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.35) !important;
+  }
+
+  /* Stats bar at top */
+  .stats-bar {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .stat-card .sc-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat-card .sc-value { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 3px; }
+  .stat-card .sc-sub { font-size: 11px; color: #64748b; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🤖 AI Sector Deep Dive — Value Chain Map</h1>
+  <p>Upstream to downstream: every layer of the AI ecosystem, with your watchlist highlighted. Click any company for details.</p>
+  <div class="legend-row">
+    <div class="watchlist-legend">⭐ Your Watchlist</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c0)"></span>Equipment</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c1)"></span>Foundry</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c2)"></span>Memory</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c3)"></span>Packaging</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c4)"></span>AI Chips</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c5)"></span>Networking</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c6)"></span>Power/Cooling</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c7)"></span>Cloud/DC</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c8)"></span>AI Models</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--c9)"></span>Applications</div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="sc-label">Hyperscaler Capex 2026</div>
+    <div class="sc-value">$660–690B</div>
+    <div class="sc-sub">75% directed at AI infra</div>
+  </div>
+  <div class="stat-card">
+    <div class="sc-label">Data Center TAM by 2030</div>
+    <div class="sc-value">$1.2T</div>
+    <div class="sc-sub">From $242B in 2025 (5x)</div>
+  </div>
+  <div class="stat-card">
+    <div class="sc-label">TSMC 3nm Utilization</div>
+    <div class="sc-value">~100%</div>
+    <div class="sc-sub">Demand 3x exceeds capacity</div>
+  </div>
+  <div class="stat-card">
+    <div class="sc-label">Enterprise AI Adoption</div>
+    <div class="sc-value">&gt;80%</div>
+    <div class="sc-sub">of apps embed AI by 2026 (Gartner)</div>
+  </div>
+</div>
+
+<div class="ecosystem" id="ecosystem">
+
+  <!-- TIER 0: Equipment -->
+  <div class="tier" id="tier-0">
+    <div class="tier-label" style="border-color:var(--c0)">
+      <div class="tier-num">01</div>
+      <div class="tier-name" style="color:var(--c0)">Equipment</div>
+      <div class="tier-desc">Lithography, etch, deposition & metrology tools</div>
+      <div class="tier-arrow" style="background:var(--c0)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">The most concentrated layer — a handful of equipment makers control the physical tools needed to fabricate any chip. EUV lithography (ASML) is the single biggest bottleneck.</div>
+      <div class="companies-row" id="row-0"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ wafers & process recipes flow down</div></div>
+
+  <!-- TIER 1: Foundry -->
+  <div class="tier" id="tier-1">
+    <div class="tier-label" style="border-color:var(--c1)">
+      <div class="tier-num">02</div>
+      <div class="tier-name" style="color:var(--c1)">Foundry</div>
+      <div class="tier-desc">Chip manufacturing at leading nodes</div>
+      <div class="tier-arrow" style="background:var(--c1)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">TSMC dominates advanced AI chip production (3nm/5nm). Intel Foundry competes with 18A process. Every major AI chip is fabricated here before packaging.</div>
+      <div class="companies-row" id="row-1"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ bare dies flow to packaging</div></div>
+
+  <!-- TIER 2: Memory -->
+  <div class="tier" id="tier-2">
+    <div class="tier-label" style="border-color:var(--c2)">
+      <div class="tier-num">03</div>
+      <div class="tier-name" style="color:var(--c2)">Memory</div>
+      <div class="tier-desc">HBM, DRAM & storage for AI workloads</div>
+      <div class="tier-arrow" style="background:var(--c2)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">HBM3E is the primary AI memory bottleneck — SK Hynix sold out its entire 2026 HBM supply. Micron is ramping fast. Every GPU training cluster needs massive memory bandwidth.</div>
+      <div class="companies-row" id="row-2"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ memory stacked onto compute dies</div></div>
+
+  <!-- TIER 3: Packaging -->
+  <div class="tier" id="tier-3">
+    <div class="tier-label" style="border-color:var(--c3)">
+      <div class="tier-num">04</div>
+      <div class="tier-name" style="color:var(--c3)">Packaging</div>
+      <div class="tier-desc">Advanced packaging & semiconductor test</div>
+      <div class="tier-arrow" style="background:var(--c3)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">CoWoS packaging (TSMC) and OSAT players integrate GPU dies with HBM. Amkor and ASE are critical for volume production. TSMC CoWoS is sold out through 2026.</div>
+      <div class="companies-row" id="row-3"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ packaged chips assembled into systems</div></div>
+
+  <!-- TIER 4: AI Chips -->
+  <div class="tier" id="tier-4">
+    <div class="tier-label" style="border-color:var(--c4)">
+      <div class="tier-num">05</div>
+      <div class="tier-name" style="color:var(--c4)">AI Chips</div>
+      <div class="tier-desc">GPUs, custom ASICs & AI accelerators</div>
+      <div class="tier-arrow" style="background:var(--c4)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">NVIDIA GPUs dominate training. 2026 is the year of custom ASICs — Broadcom co-designs 70% of hyperscaler custom chips. Marvell builds ASICs for Amazon/Microsoft. AMD MI350 gaining share.</div>
+      <div class="companies-row" id="row-4"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ chips connected via high-speed networks</div></div>
+
+  <!-- TIER 5: Networking -->
+  <div class="tier" id="tier-5">
+    <div class="tier-label" style="border-color:var(--c5)">
+      <div class="tier-num">06</div>
+      <div class="tier-name" style="color:var(--c5)">Networking</div>
+      <div class="tier-desc">Interconnects, optical & switching</div>
+      <div class="tier-arrow" style="background:var(--c5)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">Networking is the emerging bottleneck after compute. 100,000-GPU clusters need ultra-low latency optical interconnects. AAOI transceivers, Arista switches, and Amphenol connectors are all critical.</div>
+      <div class="companies-row" id="row-5"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ systems need power & thermal management</div></div>
+
+  <!-- TIER 6: Power & Cooling -->
+  <div class="tier" id="tier-6">
+    <div class="tier-label" style="border-color:var(--c6)">
+      <div class="tier-num">07</div>
+      <div class="tier-name" style="color:var(--c6)">Power & Cooling</div>
+      <div class="tier-desc">Energy supply, UPS & liquid cooling</div>
+      <div class="tier-arrow" style="background:var(--c6)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">Blackwell GPU racks draw 120kW each — 5–10x prior generation. Liquid cooling is now mandatory. Nuclear & gas power are being contracted directly by hyperscalers (Microsoft/Three Mile Island).</div>
+      <div class="companies-row" id="row-6"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ infrastructure hosted in data centers</div></div>
+
+  <!-- TIER 7: Cloud & Data Centers -->
+  <div class="tier" id="tier-7">
+    <div class="tier-label" style="border-color:var(--c7)">
+      <div class="tier-num">08</div>
+      <div class="tier-name" style="color:var(--c7)">Cloud & Data Centers</div>
+      <div class="tier-desc">Hyperscalers, colocation & edge</div>
+      <div class="tier-arrow" style="background:var(--c7)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">AWS, Azure, Google Cloud and Oracle are spending $660–690B in capex in 2026 — 75% on AI infrastructure. They also build their own custom silicon (TPU, Trainium, Maia) competing with NVIDIA.</div>
+      <div class="companies-row" id="row-7"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ compute rented by model labs</div></div>
+
+  <!-- TIER 8: Foundation Models -->
+  <div class="tier" id="tier-8">
+    <div class="tier-label" style="border-color:var(--c8)">
+      <div class="tier-num">09</div>
+      <div class="tier-name" style="color:var(--c8)">Foundation Models</div>
+      <div class="tier-desc">LLMs, multimodal & specialized AI</div>
+      <div class="tier-arrow" style="background:var(--c8)"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">GPT-5, Gemini 2, Claude 4, LLaMA 3 — these are the intelligence layer that enterprises build on. By 2026, 60%+ of large organizations have based AI strategies on foundation models. APIs and fine-tuning enable the app layer.</div>
+      <div class="companies-row" id="row-8"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ models deployed via APIs to applications</div></div>
+
+  <!-- TIER 9: Developer Tools -->
+  <div class="tier" id="tier-9">
+    <div class="tier-label" style="border-color:#8b5cf6">
+      <div class="tier-num">10</div>
+      <div class="tier-name" style="color:#8b5cf6">Dev Tools & MLOps</div>
+      <div class="tier-desc">Orchestration, data & fine-tuning platforms</div>
+      <div class="tier-arrow" style="background:#8b5cf6"></div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">The middleware connecting model APIs to production apps. Data labeling (Scale AI), model tracking (W&B), vector databases (Pinecone), and orchestration (LangChain) form the invisible glue layer.</div>
+      <div class="companies-row" id="row-9"></div>
+    </div>
+  </div>
+
+  <div class="tier-connector"><div class="connector-label">→ powering real-world AI applications</div></div>
+
+  <!-- TIER 10: Applications -->
+  <div class="tier" id="tier-10">
+    <div class="tier-label" style="border-color:var(--c9)">
+      <div class="tier-num">11</div>
+      <div class="tier-name" style="color:var(--c9)">Applications</div>
+      <div class="tier-desc">Downstream AI products across all verticals</div>
+    </div>
+    <div class="tier-body">
+      <div class="tier-desc-text">The value capture layer — enterprise SaaS, autonomous systems, consumer AI assistants, and vertical AI. By 2026, 80%+ of enterprise apps embed AI (Gartner). This is where AI revenue becomes visible to end users.</div>
+      <div class="companies-row" id="row-10"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Detail Panel -->
+<div class="detail-panel" id="detailPanel">
+  <div class="dp-header">
+    <div>
+      <div class="dp-name" id="dp-name"></div>
+      <div class="dp-ticker" id="dp-ticker"></div>
+    </div>
+    <div class="dp-tier-badge" id="dp-tier-badge"></div>
+    <button class="dp-close" onclick="closeDetail()">✕</button>
+  </div>
+  <div class="dp-body" id="dp-body"></div>
+  <div class="dp-links" id="dp-links"></div>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip">
+  <div class="tt-ticker" id="tt-ticker"></div>
+  <div class="tt-wl" id="tt-wl"></div>
+  <div class="tt-desc" id="tt-desc"></div>
+</div>
+
+<script>
+const WATCHLIST = new Set(['MU','MRVL','INTC','MSFT','AAPL','GOOG','TSLA','AMKR','ASX','NOK','AAOI','SIVE','CRCL','SPCX','PWRL','DRAM']);
+
+const TIERS = [
+  { id: 0, color: 'var(--c0)', companies: [
+    { name:'ASML', ticker:'ASML', desc:'Only maker of EUV lithography machines — every advanced AI chip depends on ASML equipment. Monopoly in extreme ultraviolet. ~$40B revenue.', role:'EUV lithography machines' },
+    { name:'Applied Materials', ticker:'AMAT', desc:'Largest semi equipment maker — deposition, etch, inspection. Jumped +8% this week on Citi upgrade. Direct picks-and-shovels AI play.', role:'Deposition & etch tools', watchlistNote:'AMAT jumped +8% this week — not on your watchlist yet' },
+    { name:'Lam Research', ticker:'LRCX', desc:'Etch and deposition equipment leader. Critical for 3D NAND and leading-edge logic nodes used in AI chips.', role:'Etch equipment' },
+    { name:'KLA Corp', ticker:'KLAC', desc:'Semiconductor process control — inspection and metrology tools that ensure chip yield. No chip ships without KLA validation.', role:'Process control & metrology' },
+    { name:'Entegris', ticker:'ENTG', desc:'Specialty chemicals and materials (CMP slurries, photoresists). Every wafer processed uses Entegris consumables.', role:'Specialty materials & chemicals' },
+  ]},
+  { id: 1, color: 'var(--c1)', companies: [
+    { name:'TSMC', ticker:'TSM', desc:'Manufactures ~90% of the world\'s most advanced AI chips (NVIDIA, AMD, Apple, Broadcom). 3nm capacity is sold out; 2nm ramping. The single most critical node in the AI supply chain.', role:'Leading-edge foundry (3nm/5nm/2nm)' },
+    { name:'Samsung Foundry', ticker:'KRX:005930', desc:'Second-largest foundry. Competes with TSMC at 3nm/4nm. Supplies memory AND logic. Losing ground to TSMC in advanced logic.', role:'Foundry + memory' },
+    { name:'Intel Foundry', ticker:'INTC', desc:'Intel\'s 18A process node is its foundry turnaround bet. Hit all-time high stock price this week (+217% YTD). Key risk: can 18A match TSMC quality?', role:'Intel 18A foundry', watchlistNote:'Your INTC position — foundry turnaround story', inWatchlist:true },
+    { name:'GlobalFoundries', ticker:'GFS', desc:'Mature node foundry (22nm-14nm). Serves auto, defense, RF — not cutting-edge AI but critical for adjacent chips in AI systems.', role:'Mature node foundry' },
+  ]},
+  { id: 2, color: 'var(--c2)', companies: [
+    { name:'Micron', ticker:'MU', desc:'US leader in HBM3E and DRAM. AI HBM is the fastest-growing and highest-margin product. Earnings next week — most important catalyst for your watchlist. Ramping aggressively vs SK Hynix.', role:'HBM3E, DRAM, NAND', inWatchlist:true },
+    { name:'SK Hynix', ticker:'KRX:000660', desc:'#1 HBM supplier — sold out its entire 2026 HBM allocation. NVIDIA\'s primary HBM source. Listed in Korea, not directly on US exchanges.', role:'#1 HBM supplier' },
+    { name:'Samsung Memory', ticker:'KRX:005930', desc:'#3 in HBM behind SK Hynix and Micron. Lagging on HBM3E yields but largest DRAM producer overall.', role:'DRAM & HBM' },
+    { name:'Roundhill Memory ETF', ticker:'DRAM', desc:'ETF launched April 2026 — basket exposure to global memory companies (MU, SK Hynix, Samsung, Nanya). Lower volatility way to play memory supercycle.', role:'Memory sector ETF', inWatchlist:true },
+  ]},
+  { id: 3, color: 'var(--c3)', companies: [
+    { name:'Amkor Technology', ticker:'AMKR', desc:'#2 global OSAT (outsourced semiconductor assembly & test). Critical for advanced packaging of AI chips. Near 52-week high at $86.55. CoWoS-adjacent capacity.', role:'Advanced packaging & test', inWatchlist:true },
+    { name:'ASE Technology', ticker:'ASX', desc:'World\'s largest chip packaging and test company. Rides AI packaging demand alongside Amkor. Strong Q2 2026 revenue. Trades as ADR on NYSE.', role:'#1 global OSAT', inWatchlist:true },
+    { name:'TSMC CoWoS', ticker:'TSM', desc:'TSMC\'s own CoWoS (Chip-on-Wafer-on-Substrate) packaging is sold out through 2026. Integrates HBM with GPU compute dies. Most advanced packaging technology.', role:'CoWoS advanced packaging' },
+    { name:'Powertech', ticker:'TWSE:6239', desc:'Taiwan-based OSAT specializing in memory packaging. Works with SK Hynix and Samsung on HBM packaging.', role:'Memory packaging specialist' },
+  ]},
+  { id: 4, color: 'var(--c4)', companies: [
+    { name:'NVIDIA', ticker:'NVDA', desc:'The anchor of the AI compute stack. H100/Blackwell GPUs dominate AI training. CUDA software moat makes switching extremely hard. ~$2T market cap. Not on your watchlist — notable gap.', role:'AI GPUs (H100, Blackwell)', watchlistNote:'Notable gap in your watchlist — the central AI chip player' },
+    { name:'Broadcom', ticker:'AVGO', desc:'Co-designed Alphabet\'s TPU and Meta\'s MTIA — controls ~70% of custom AI ASIC market. Also dominates networking silicon. Reports earnings next week. One of strongest AI plays.', role:'Custom AI ASICs + networking', watchlistNote:'AVGO reporting next week — key for MRVL & your semi holdings' },
+    { name:'Marvell Technology', ticker:'MRVL', desc:'Custom AI ASICs for Amazon (Trainium) and Microsoft. +228% YTD — one of the year\'s biggest winners. KeyBanc raised price target this week. Custom silicon is the next frontier.', role:'Custom AI ASICs (Amazon, MSFT)', inWatchlist:true },
+    { name:'AMD', ticker:'AMD', desc:'MI300X/MI350 GPU gaining real traction — wins at Microsoft, Meta, OpenAI, xAI. Rack-scale MI400 due H2 2026. The only credible GPU alternative to NVIDIA.', role:'AI GPUs (MI300X, MI350)' },
+    { name:'Intel Gaudi', ticker:'INTC', desc:'Intel\'s AI accelerator brand. Gaudi 3 lags behind NVIDIA/AMD but priced competitively. Bundled with Intel foundry offering for enterprise buyers.', role:'AI accelerators (Gaudi)', inWatchlist:true },
+    { name:'Google TPU', ticker:'GOOG', desc:'Google\'s Tensor Processing Units (TPUv5/v6) — used internally for Gemini training and rented via Google Cloud TPU VMs. One of the most powerful custom chips.', role:'Custom AI training chips', inWatchlist:true },
+    { name:'Apple Silicon', ticker:'AAPL', desc:'M4/A18 chips lead in edge AI inference — Neural Engine performs AI tasks on-device. Apple Intelligence features run locally without cloud dependency.', role:'Edge AI chips (M4, A18)', inWatchlist:true },
+    { name:'Qualcomm', ticker:'QCOM', desc:'Snapdragon X with on-device AI NPU — leader in mobile and edge AI inference. AI PC chips challenge Intel for laptop market.', role:'Mobile & edge AI chips' },
+  ]},
+  { id: 5, color: 'var(--c5)', companies: [
+    { name:'Applied Optoelectronics', ticker:'AAOI', desc:'Fiber optic transceivers for AI data centers — +390% YTD 🔥. Optical interconnects are the networking bottleneck for 100K-GPU clusters. High momentum, high risk of mean reversion.', role:'Optical transceivers for AI DCs', inWatchlist:true },
+    { name:'Sivers Semiconductors', ticker:'SIVE', desc:'Stockholm-listed (OMXSTO:SIVE). Wireless & photonics chips. Small-cap play on optical networking for AI. Check US OTC liquidity before trading.', role:'Wireless & photonics chips', inWatchlist:true },
+    { name:'Nokia', ticker:'NOK', desc:'Network equipment (5G, 6G routing/switching). Potential beneficiary of AI-driven network upgrade cycle. Value/defensive play with dividend. Lower-growth but real.', role:'Network equipment (5G/6G)', inWatchlist:true },
+    { name:'Arista Networks', ticker:'ANET', desc:'Data center and campus networking switches. Every AI cluster needs Arista switches for east-west GPU traffic. One of the most direct AI networking beneficiaries.', role:'Data center switching', watchlistNote:'ANET — not on your watchlist, strong AI networking play' },
+    { name:'Coherent', ticker:'COHR', desc:'Photonics and optical components — transceivers, lasers, and modules for data center interconnects. Beneficiary as AI clusters demand more optical bandwidth.', role:'Optical components & modules' },
+    { name:'Astera Labs', ticker:'ALAB', desc:'PCIe/CXL connectivity chips that connect GPUs, CPUs and memory at ultra-high speed inside AI servers. One of the fastest-growing AI infra names.', role:'PCIe/CXL connectivity chips' },
+    { name:'Amphenol', ticker:'APH', desc:'33% market share in AI data center interconnects. Advanced fiber-optic and high-density cable assemblies essential for hyperscale AI builds.', role:'Connectors & interconnects' },
+    { name:'Credo Technology', ticker:'CRDO', desc:'High-speed SerDes and optical DSP chips for 800G/1.6T data center links. Growing fast as AI clusters demand higher bandwidth.', role:'SerDes & optical DSP chips' },
+  ]},
+  { id: 6, color: 'var(--c6)', companies: [
+    { name:'Vertiv', ticker:'VRT', desc:'Liquid cooling systems and power distribution for data centers. Blackwell GPU racks hit 120kW — 5–10x prior gen — making Vertiv critical. One of the purest AI power plays.', role:'Liquid cooling & power distribution' },
+    { name:'Schneider Electric', ticker:'SU.PA', desc:'Data center power management and UPS systems. Partners with major hyperscalers for modular, energy-efficient DC builds.', role:'Power management & UPS' },
+    { name:'Eaton', ticker:'ETN', desc:'Power management — UPS, PDUs, and electrical systems for data centers. Direct beneficiary of AI buildout power demand.', role:'UPS & power systems' },
+    { name:'Constellation Energy', ticker:'CEG', desc:'Largest US nuclear fleet — signed 20-year PPA with Microsoft (Three Mile Island restart). Nuclear = 24/7 clean power for AI data centers. Direct long-term contracts with hyperscalers.', role:'Nuclear power supply (24/7 clean)' },
+    { name:'Vistra', ticker:'VST', desc:'Independent power producer with nuclear and natural gas. Pursuing agreements to supply data centers. AI power demand makes utilities growth stocks.', role:'Power generation (nuclear + gas)' },
+    { name:'GE Vernova', ticker:'GEV', desc:'Gas turbines and grid equipment — supplying power infrastructure for AI-driven electricity demand surge. Spun out of GE in 2024.', role:'Grid & turbine equipment' },
+  ]},
+  { id: 7, color: 'var(--c7)', companies: [
+    { name:'Microsoft Azure', ticker:'MSFT', desc:'#2 cloud, #1 in enterprise AI (Copilot). OpenAI partnership + Maia custom chip. $100B+ AI capex planned. Your MSFT holding is a cloud + AI model play.', role:'Cloud + AI (Copilot, Azure AI)', inWatchlist:true },
+    { name:'Amazon AWS', ticker:'AMZN', desc:'#1 cloud by revenue. Trainium/Inferentia custom chips (co-designed with Marvell). Amazon Bedrock hosts foundation models. Massive AI capex.', role:'Cloud + AI (Bedrock, Trainium)' },
+    { name:'Google Cloud', ticker:'GOOG', desc:'#3 cloud, but most AI-native. TPU access, Gemini integration, Vertex AI platform. Your GOOG holding spans chips, cloud, models AND consumer apps.', role:'Cloud + AI (Vertex, TPUs)', inWatchlist:true },
+    { name:'Oracle Cloud', ticker:'ORCL', desc:'Fast-growing AI cloud — GPU cluster rental is booming. Major NVIDIA H100/Blackwell GPU customer. Partnered with OpenAI for compute.', role:'GPU cluster cloud (H100, Blackwell)' },
+    { name:'Equinix', ticker:'EQIX', desc:'Largest colo data center operator. Neutral colocation where hyperscalers, enterprises and networks interconnect. AI buildout driving demand.', role:'Colocation data centers' },
+    { name:'SuperMicro', ticker:'SMCI', desc:'AI server manufacturer — builds GPU server racks for NVIDIA Blackwell deployments. Volatile stock but key in the GPU server assembly chain.', role:'AI server systems (GPU racks)' },
+    { name:'Powerlaw Corp', ticker:'PWRL', desc:'Nasdaq-listed fund investing in private tech (AI, aerospace, SaaS). Treat as a closed-end fund — exposure to pre-IPO AI companies. Check NAV vs price premium.', role:'Private AI company exposure', inWatchlist:true },
+    { name:'SpaceX', ticker:'SPCX', desc:'IPO\'d June 12, now ~$202/share ($2.6T mkt cap). Starlink provides global AI connectivity + Starshield for defense AI. Just 8 days as a public company.', role:'Space + AI connectivity (Starlink)', inWatchlist:true },
+  ]},
+  { id: 8, color: 'var(--c8)', companies: [
+    { name:'OpenAI', ticker:'Private', desc:'GPT-4/5 models power enterprise and consumer AI. Partners with Microsoft for compute. Most widely deployed AI API. Pursuing IPO — your PWRL may have indirect exposure.', role:'GPT-4/5 foundation models' },
+    { name:'Anthropic', ticker:'Private', desc:'Claude 4 family — known for safety, coding, and enterprise use cases. Claude is described as "go-to for safety-critical applications." Amazon + Google invested. Private.', role:'Claude foundation models' },
+    { name:'Google DeepMind', ticker:'GOOG', desc:'Gemini 2 models — multimodal, integrated deeply into Google Search, Cloud, and Android. One of the most capable model families. Gives GOOG a vertical AI stack.', role:'Gemini 2 foundation models', inWatchlist:true },
+    { name:'Meta AI', ticker:'META', desc:'LLaMA 3 open-source — the most widely deployed open-weight model. Powers Meta\'s social platforms + enterprise fine-tuning. Open-source strategy is disrupting closed model pricing.', role:'LLaMA 3 open-source models' },
+    { name:'xAI / Grok', ticker:'Private', desc:'Elon Musk\'s AI company — Grok 3 model, Colossus training cluster (100K H100s). SpaceX connection gives SPCX holders potential indirect exposure.', role:'Grok foundation models' },
+    { name:'Mistral AI', ticker:'Private', desc:'European open-weight model leader. Le Chat and Mistral Large compete on efficiency vs GPT-5. Growing enterprise adoption in EU.', role:'Open-weight EU models' },
+  ]},
+  { id: 9, color: '#8b5cf6', companies: [
+    { name:'Databricks', ticker:'Private', desc:'Unified data + AI platform — most popular enterprise MLOps stack. Handles data pipelines, model training, and deployment. IPO expected in 2026/2027.', role:'Data + ML platform (MLOps)' },
+    { name:'Scale AI', ticker:'Private', desc:'Data labeling and RLHF services — trained GPT, Claude, Gemini models. Essential but invisible middleware. Government AI contracts growing.', role:'AI data labeling & RLHF' },
+    { name:'Weights & Biases', ticker:'Private', desc:'ML experiment tracking and model monitoring. Used by nearly every AI team to track training runs, compare models, and monitor production.', role:'ML experiment tracking' },
+    { name:'Hugging Face', ticker:'Private', desc:'The GitHub for AI models — hosts 500K+ models and datasets. Fine-tuning hub for LLaMA, Mistral, and thousands of open-source models.', role:'Model hub & fine-tuning platform' },
+    { name:'LangChain', ticker:'Private', desc:'Open-source AI orchestration framework — connects LLMs to tools, databases, and agents. Most popular library for building AI applications.', role:'LLM orchestration framework' },
+    { name:'Pinecone', ticker:'Private', desc:'Vector database — stores embeddings for RAG (Retrieval Augmented Generation). Essential infrastructure for enterprise AI apps with proprietary data.', role:'Vector database for RAG' },
+  ]},
+  { id: 10, color: 'var(--c9)', companies: [
+    { name:'Microsoft Copilot', ticker:'MSFT', desc:'AI embedded in Office 365, Teams, GitHub. 50M+ enterprise users. Most widely deployed enterprise AI product. Powered by OpenAI GPT + Azure.', role:'Enterprise AI productivity', inWatchlist:true },
+    { name:'Salesforce Einstein', ticker:'CRM', desc:'AI embedded in CRM, sales, and service clouds. 100M+ seats. One of the largest enterprise AI deployments.', role:'AI CRM & sales automation' },
+    { name:'Google AI Products', ticker:'GOOG', desc:'Gemini consumer AI, AI Search, NotebookLM, Google Workspace AI. GOOG controls both infrastructure and consumer AI products end-to-end.', role:'Consumer & enterprise AI apps', inWatchlist:true },
+    { name:'Apple Intelligence', ticker:'AAPL', desc:'On-device AI in iPhone/Mac — Private Cloud Compute for privacy. AI features in iOS 18+ reaching 1B+ devices. Edge AI at massive scale.', role:'On-device AI (iOS/macOS)', inWatchlist:true },
+    { name:'Tesla / Optimus', ticker:'TSLA', desc:'FSD autonomous driving + Optimus humanoid robot — AI-native physical products. Dojo supercomputer for training. Down ~8.7% past month amid SPCX narrative.', role:'Autonomous vehicles + AI robotics', inWatchlist:true },
+    { name:'SpaceX Starlink', ticker:'SPCX', desc:'AI-powered satellite constellation providing global connectivity. Starshield for defense AI applications. Just IPO\'d at $135, now ~$202.', role:'AI connectivity infrastructure', inWatchlist:true },
+    { name:'Palantir', ticker:'PLTR', desc:'AI-powered data analytics for government and enterprise. AIP (AI Platform) rapidly adopted by defense and Fortune 500. One of the most AI-pure enterprise software plays.', role:'Government & enterprise AI analytics' },
+    { name:'ServiceNow', ticker:'NOW', desc:'Enterprise workflow AI — Now Intelligence embedded in IT, HR, and operations. +40% of revenue from AI-enhanced products by 2026.', role:'Enterprise workflow AI' },
+    { name:'CrowdStrike', ticker:'CRWD', desc:'AI-powered cybersecurity — Falcon platform uses ML to detect threats in real time. AI is core to the product, not a feature add-on.', role:'AI-native cybersecurity', watchlistNote:'CRWD reports earnings next week' },
+    { name:'Tempus AI', ticker:'TEM', desc:'AI in healthcare — genomics, clinical decision support, drug discovery. One of the fastest-growing vertical AI companies.', role:'Healthcare AI & genomics' },
+    { name:'Perplexity AI', ticker:'Private', desc:'AI-native search engine challenging Google. $10B+ valuation. Consumer AI product with fast-growing user base.', role:'AI-native search' },
+    { name:'Circle / USDC', ticker:'CRCL', desc:'USDC stablecoin powers AI micro-payments and autonomous agent transactions. Revenue +64% YoY. Stablecoin legislation tailwind. Uncorrelated to rest of your watchlist.', role:'Stablecoin for AI payments', inWatchlist:true },
+  ]},
+];
+
+const DETAIL_EXTRA = {};
+
+function makeColor(tierColor, inWatchlist) {
+  return inWatchlist
+    ? { bg: '#eff6ff', border: '#3b82f6', text: '#1d4ed8' }
+    : { bg: '#f8fafc', border: '#e2e8f0', text: '#334155' };
+}
+
+let selectedEl = null;
+
+function showDetail(company, tierColor, tierName) {
+  document.getElementById('dp-name').textContent = company.name;
+  document.getElementById('dp-ticker').textContent = company.ticker + (company.role ? ' · ' + company.role : '');
+  const badge = document.getElementById('dp-tier-badge');
+  badge.textContent = tierName;
+  badge.style.background = tierColor + '20';
+  badge.style.color = tierColor;
+  badge.style.border = '1px solid ' + tierColor + '40';
+  document.getElementById('dp-body').textContent = company.desc;
+
+  const links = document.getElementById('dp-links');
+  links.innerHTML = '';
+  if (company.inWatchlist) {
+    const chip = document.createElement('span');
+    chip.className = 'dp-link-chip';
+    chip.textContent = '⭐ In your watchlist';
+    links.appendChild(chip);
+  }
+  if (company.watchlistNote) {
+    const chip = document.createElement('span');
+    chip.className = 'dp-link-chip';
+    chip.style.background = '#fefce8';
+    chip.style.borderColor = '#fef08a';
+    chip.style.color = '#a16207';
+    chip.textContent = '💡 ' + company.watchlistNote;
+    links.appendChild(chip);
+  }
+
+  document.getElementById('detailPanel').classList.add('visible');
+  document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('visible');
+  if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+}
+
+function buildEcosystem() {
+  TIERS.forEach(tier => {
+    const row = document.getElementById('row-' + tier.id);
+    if (!row) return;
+
+    const tierLabel = document.querySelector('#tier-' + tier.id + ' .tier-name');
+    const tierName = tierLabel ? tierLabel.textContent : 'Tier';
+
+    tier.companies.forEach(company => {
+      const el = document.createElement('div');
+      el.className = 'company' + (company.inWatchlist ? ' watchlist' : '');
+
+      const colors = company.inWatchlist
+        ? { bg: '#eff6ff', border: '#3b82f6', text: '#1d4ed8' }
+        : { bg: '#ffffff', border: '#e2e8f0', text: '#334155' };
+
+      el.style.background = colors.bg;
+      el.style.borderColor = colors.border;
+      el.style.color = colors.text;
+
+      el.innerHTML = company.name +
+        (company.inWatchlist ? '<span class="wl-badge" style="background:#3b82f6;color:#fff">WL</span>' : '') +
+        (company.ticker && !company.inWatchlist ? '<span class="ticker-tag">' + company.ticker + '</span>' : '');
+
+      // Tooltip
+      el.addEventListener('mouseenter', (e) => {
+        const tt = document.getElementById('tooltip');
+        document.getElementById('tt-ticker').textContent = company.name + (company.ticker ? ' (' + company.ticker + ')' : '');
+        document.getElementById('tt-wl').textContent = company.inWatchlist ? '⭐ In your watchlist' : (company.watchlistNote || '');
+        document.getElementById('tt-desc').textContent = company.desc.slice(0, 120) + (company.desc.length > 120 ? '…' : '');
+        tt.classList.add('visible');
+        moveTT(e);
+      });
+      el.addEventListener('mousemove', moveTT);
+      el.addEventListener('mouseleave', () => {
+        document.getElementById('tooltip').classList.remove('visible');
+      });
+
+      // Click for detail
+      el.addEventListener('click', () => {
+        if (selectedEl) selectedEl.classList.remove('selected');
+        el.classList.add('selected');
+        selectedEl = el;
+        showDetail(company, tier.color, tierName);
+      });
+
+      row.appendChild(el);
+    });
+  });
+}
+
+function moveTT(e) {
+  const tt = document.getElementById('tooltip');
+  const x = e.clientX + 14;
+  const y = e.clientY - 10;
+  const w = tt.offsetWidth;
+  const vw = window.innerWidth;
+  tt.style.left = (x + w > vw ? x - w - 28 : x) + 'px';
+  tt.style.top = y + 'px';
+}
+
+buildEcosystem();
+</script>
+</body>
+</html>
