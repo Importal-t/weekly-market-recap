@@ -1,0 +1,3 @@
+.env
+*.bak
+.github_pages_url

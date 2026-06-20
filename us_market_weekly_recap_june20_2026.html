@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Market Weekly Recap — Week of June 16–20, 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: #0f172a;
+    }
+    .header-left .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .header-right .date-badge {
+      font-size: 12px;
+      background: #f1f5f9;
+      color: #64748b;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      margin-top: 36px;
+    }
+
+    /* ── Index Cards ── */
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .index-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .index-card .name {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .index-card .level {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 6px;
+      letter-spacing: -0.5px;
+    }
+    .index-card .weekly {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .index-card .note {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .pos { color: #16a34a; }
+    .neg { color: #dc2626; }
+    .neu { color: #d97706; }
+
+    /* ── Macro Spotlight ── */
+    .macro-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 10px;
+    }
+    .macro-card .macro-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .macro-card .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .badge-red   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .badge-green { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .badge-blue  { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .badge-amber { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+
+    .macro-card .macro-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .macro-card p {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.7;
+    }
+    .macro-card .stat-row {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .macro-card .stat {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      flex: 1;
+    }
+    .macro-card .stat .stat-label { font-size: 11px; color: #94a3b8; }
+    .macro-card .stat .stat-value { font-size: 16px; font-weight: 700; margin-top: 2px; }
+
+    /* ── Daily Timeline ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 38px;
+      top: 40px;
+      bottom: 0;
+      width: 1px;
+      background: #e2e8f0;
+    }
+    .tl-date {
+      width: 64px;
+      flex-shrink: 0;
+      text-align: right;
+      padding-top: 14px;
+    }
+    .tl-date .day { font-size: 18px; font-weight: 700; color: #cbd5e1; }
+    .tl-date .mon { font-size: 10px; color: #94a3b8; text-transform: uppercase; }
+    .tl-dot {
+      width: 16px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 18px;
+    }
+    .tl-dot span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      flex-shrink: 0;
+    }
+    .tl-dot span.highlight { border-color: #3b82f6; background: #dbeafe; }
+    .tl-content {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .tl-content .tl-label {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tl-content .tl-headline {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 3px;
+    }
+    .tl-content .tl-body {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+    .tl-perf {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .tl-perf .perf-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* ── Tech Spotlight ── */
+    .stock-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .stock-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .stock-card .ticker {
+      font-size: 12px;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.5px;
+    }
+    .stock-card .company { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+    .stock-card .price {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 8px;
+    }
+    .stock-card .chg { font-size: 12px; font-weight: 600; margin-top: 2px; }
+    .stock-card .note { font-size: 11px; color: #94a3b8; margin-top: 6px; line-height: 1.5; }
+
+    /* ── Sector Bar ── */
+    .sector-list { display: flex; flex-direction: column; gap: 8px; }
+    .sector-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sector-label { font-size: 12px; color: #475569; width: 160px; flex-shrink: 0; }
+    .sector-bar-track {
+      flex: 1;
+      background: #f1f5f9;
+      border-radius: 4px;
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sector-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+    .sector-pct { font-size: 12px; font-weight: 600; width: 52px; text-align: right; flex-shrink: 0; }
+
+    /* ── Next Week Focus ── */
+    .nw-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .nw-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .nw-card .nw-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    .nw-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .nw-item:last-child { margin-bottom: 0; }
+    .nw-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #3b82f6;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .nw-dot.amber { background: #f59e0b; }
+    .nw-dot.green { background: #22c55e; }
+    .nw-dot.red   { background: #ef4444; }
+    .nw-item .nw-text {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .nw-item .nw-text strong { color: #1e293b; font-weight: 600; }
+
+    /* ── Watch Callout ── */
+    .watchlist-callout {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .watchlist-callout .icon { font-size: 22px; flex-shrink: 0; }
+    .watchlist-callout .wl-title { font-size: 14px; font-weight: 600; color: #1d4ed8; margin-bottom: 4px; }
+    .watchlist-callout p { font-size: 13px; color: #64748b; line-height: 1.6; }
+
+    /* ── Watchlist Tables ── */
+    .wl-category-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin: 18px 0 8px;
+    }
+    .wl-cat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .wl-table {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .wl-row {
+      display: grid;
+      grid-template-columns: 70px 160px 80px 110px 1fr;
+      gap: 0;
+      padding: 10px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      align-items: center;
+    }
+    .wl-row:last-child { border-bottom: none; }
+    .wl-header-row {
+      background: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 8px 16px;
+    }
+    .wl-ticker {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e40af;
+      letter-spacing: 0.3px;
+    }
+    .wl-col-ticker { }
+    .wl-col-name { font-size: 12px; color: #475569; }
+    .wl-col-price { font-size: 12px; font-weight: 600; color: #1e293b; }
+    .wl-col-ytd { font-size: 12px; font-weight: 600; }
+    .wl-col-note { font-size: 11px; color: #64748b; line-height: 1.5; padding-left: 12px; }
+
+    /* ── Recommendations ── */
+    .rec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .rec-card {
+      border-radius: 12px;
+      padding: 18px 20px;
+      border: 1px solid;
+    }
+    .rec-green  { background: #f0fdf4; border-color: #bbf7d0; }
+    .rec-amber  { background: #fffbeb; border-color: #fde68a; }
+    .rec-blue   { background: #eff6ff; border-color: #bfdbfe; }
+    .rec-purple { background: #faf5ff; border-color: #e9d5ff; }
+    .rec-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    .rec-green  .rec-label { color: #16a34a; }
+    .rec-amber  .rec-label { color: #d97706; }
+    .rec-blue   .rec-label { color: #2563eb; }
+    .rec-purple .rec-label { color: #7c3aed; }
+    .rec-item { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; }
+    .rec-item:last-child { margin-bottom: 0; }
+    .rec-ticker { font-size: 11px; font-weight: 700; color: #1e293b; }
+    .rec-text { font-size: 12px; color: #475569; line-height: 1.55; }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid #e2e8f0; margin: 32px 0 0; }
+
+    /* ── Footer ── */
+    footer { font-size: 11px; color: #cbd5e1; text-align: center; margin-top: 32px; line-height: 1.7; }
+    footer a { color: #94a3b8; text-decoration: none; }
+    footer a:hover { color: #64748b; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>🇺🇸 US Market Weekly Recap</h1>
+      <div class="subtitle">Week of June 16–20, 2026 &nbsp;·&nbsp; Markets closed Friday (Juneteenth)</div>
+    </div>
+    <div class="header-right">
+      <span class="date-badge">Generated Jun 20, 2026</span>
+    </div>
+  </div>
+
+  <!-- Index Performance -->
+  <div class="section-title">Major Indices — Weekly Snapshot</div>
+  <div class="index-grid">
+    <div class="index-card">
+      <div class="name">S&amp;P 500</div>
+      <div class="level">~7,500</div>
+      <div class="weekly pos">▲ ~+2.6% WTD</div>
+      <div class="note">Strong open on Iran deal; mid-week pressure from hawkish Fed dot plot; recovered Thursday</div>
+    </div>
+    <div class="index-card">
+      <div class="name">Nasdaq Composite</div>
+      <div class="level">~21,900</div>
+      <div class="weekly pos">▲ ~+3.1% WTD</div>
+      <div class="note">Tech led gains Mon &amp; Thu; dipped Tue on sector rotation; AI names remained resilient</div>
+    </div>
+    <div class="index-card">
+      <div class="name">Dow Jones</div>
+      <div class="level">~51,900</div>
+      <div class="weekly pos">▲ ~+1.8% WTD</div>
+      <div class="note">Hit record high Tuesday (~52,000); relatively steady as energy/defense rotated lower</div>
+    </div>
+  </div>
+
+  <!-- Macro Spotlights -->
+  <div class="section-title">Macro Themes of the Week</div>
+
+  <div class="macro-card">
+    <div class="macro-header">
+      <span class="badge badge-green">BULLISH</span>
+      <span class="macro-title">US–Iran Peace Deal — Strait of Hormuz Reopened</span>
+    </div>
+    <p>A preliminary peace agreement announced June 15 triggered one of the year's biggest single-day rallies. Iran agreed to allow free shipping through the Strait of Hormuz; the US ended its blockade of Iranian oil exports. Brent crude immediately fell ~4.8% to ~$83/bbl, a three-month low, as markets priced in 1.5–2M additional barrels/day returning to supply.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-label">S&amp;P 500 on Mon Jun 15</div>
+        <div class="stat-value pos">+1.49%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Nasdaq on Mon Jun 15</div>
+        <div class="stat-value pos">+2.38%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Brent Crude drop</div>
+        <div class="stat-value neg">−4.8% → ~$83</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="macro-card">
+    <div class="macro-header">
+      <span class="badge badge-amber">CAUTION</span>
+      <span class="macro-title">Fed Holds Rates — But Dot Plot Turns Hawkish</span>
+    </div>
+    <p>In Kevin Warsh's inaugural FOMC meeting, the Fed held the fed funds rate steady at <strong>3.50%–3.75%</strong> for the fourth consecutive meeting. However, the updated dot plot shocked markets: the median official now expects rates to end 2026 <em>higher</em> than today, a reversal from March's implied cut. 9 of 19 officials backed continued rate hikes this year. Markets now price a 25bp hike as early as October 2026.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-label">Current Rate</div>
+        <div class="stat-value neu">3.50–3.75%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Median year-end 2026</div>
+        <div class="stat-value neg">3.8% (was 3.4%)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Hike priced in by</div>
+        <div class="stat-value neg">Oct 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Timeline -->
+  <div class="section-title">Day-by-Day</div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="tl-date"><div class="day">15</div><div class="mon">Jun · Mon</div></div>
+      <div class="tl-dot"><span class="highlight"></span></div>
+      <div class="tl-content">
+        <div class="tl-label">Big Rally</div>
+        <div class="tl-headline">US–Iran deal sends stocks soaring, oil tumbling</div>
+        <div class="tl-body">Stocks jumped at the open as Wall Street welcomed the breakthrough peace deal. Energy stocks fell as oil prices dropped sharply; airlines and consumer stocks surged on lower fuel costs. Broader market recorded its best single-day move in weeks.</div>
+        <div class="tl-perf">
+          <span class="perf-chip pos">S&amp;P 500 +1.49%</span>
+          <span class="perf-chip pos">Nasdaq +2.38%</span>
+          <span class="perf-chip pos">Dow +1.20%</span>
+          <span class="perf-chip neg">Brent −4.8%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="tl-date"><div class="day">16</div><div class="mon">Jun · Tue</div></div>
+      <div class="tl-dot"><span></span></div>
+      <div class="tl-content">
+        <div class="tl-label">Mixed</div>
+        <div class="tl-headline">Dow hits record ~52,000; tech pulls back, Fed meeting begins</div>
+        <div class="tl-body">Rotation away from tech as investors grew cautious ahead of the Fed decision. The Dow eked out a new record high (~52,000) while the Nasdaq retreated. Applied Materials jumped +8% after Citi raised price targets, but broader semis were mixed.</div>
+        <div class="tl-perf">
+          <span class="perf-chip pos">Dow +0.64% ▲ REC</span>
+          <span class="perf-chip neg">S&amp;P 500 −0.08%</span>
+          <span class="perf-chip neg">Nasdaq −1.15%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="tl-date"><div class="day">17</div><div class="mon">Jun · Wed</div></div>
+      <div class="tl-dot"><span></span></div>
+      <div class="tl-content">
+        <div class="tl-label">Volatile</div>
+        <div class="tl-headline">Fed dot plot shocks markets — intraday plunge, partial recovery</div>
+        <div class="tl-body">The FOMC held rates but the hawkish dot plot triggered an intraday sell-off in S&amp;P 500 and Nasdaq. Markets recovered into the close after digesting Chair Warsh's press conference, which emphasized data-dependence. Small caps underperformed.</div>
+        <div class="tl-perf">
+          <span class="perf-chip neg">Russell 2000 −0.87%</span>
+          <span class="perf-chip pos">S&amp;P 500 +0.10% (recovered)</span>
+          <span class="perf-chip pos">Nasdaq +0.34%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="tl-date"><div class="day">18</div><div class="mon">Jun · Thu</div></div>
+      <div class="tl-dot"><span class="highlight"></span></div>
+      <div class="tl-content">
+        <div class="tl-label">Recovery</div>
+        <div class="tl-headline">Nasdaq, Russell 2000 rebound; US formally ends Iran blockade</div>
+        <div class="tl-body">Tech stocks led a broad recovery as institutional buyers stepped in. The formal signing of the interim US-Iran peace agreement provided additional clarity on the geopolitical front. NVIDIA up ~2.95% on the week; AI/semiconductor momentum intact.</div>
+        <div class="tl-perf">
+          <span class="perf-chip pos">S&amp;P 500 +1.15%</span>
+          <span class="perf-chip pos">Nasdaq +1.50%</span>
+          <span class="perf-chip pos">Dow +0.80%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="tl-date"><div class="day">19</div><div class="mon">Jun · Fri</div></div>
+      <div class="tl-dot"><span></span></div>
+      <div class="tl-content">
+        <div class="tl-label">Closed</div>
+        <div class="tl-headline">Market holiday — Juneteenth</div>
+        <div class="tl-body">US equity markets and bond markets closed in observance of Juneteenth National Independence Day. Week's gains locked in heading into the weekend.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tech / AI Spotlight -->
+  <div class="section-title">Tech &amp; AI Spotlight</div>
+  <div class="stock-grid">
+    <div class="stock-card">
+      <div class="ticker">NVDA</div>
+      <div class="company">NVIDIA</div>
+      <div class="price">&nbsp;</div>
+      <div class="chg pos">▲ ~+2.95% WTD</div>
+      <div class="note">AI GPU demand remains the defining bull case. Maintains "Strong Buy" consensus from analysts.</div>
+    </div>
+    <div class="stock-card">
+      <div class="ticker">AAPL</div>
+      <div class="company">Apple</div>
+      <div class="price">~$299</div>
+      <div class="chg neu">↔ Mixed</div>
+      <div class="note">Approaching $300 milestone. Watched closely as AI integration into iOS accelerates.</div>
+    </div>
+    <div class="stock-card">
+      <div class="ticker">MSFT</div>
+      <div class="company">Microsoft</div>
+      <div class="price">~$413</div>
+      <div class="chg pos">▲ Positive WTD</div>
+      <div class="note">Azure AI and Copilot remain key growth drivers; cloud revenue durability highlighted by analysts.</div>
+    </div>
+    <div class="stock-card">
+      <div class="ticker">META</div>
+      <div class="company">Meta Platforms</div>
+      <div class="price">&nbsp;</div>
+      <div class="chg pos">▲ Positive WTD</div>
+      <div class="note">AI ad-targeting improvements + LLaMA models cited by bulls. Carries "Strong Buy" rating.</div>
+    </div>
+    <div class="stock-card">
+      <div class="ticker">GOOGL</div>
+      <div class="company">Alphabet</div>
+      <div class="price">&nbsp;</div>
+      <div class="chg pos">▲ Positive WTD</div>
+      <div class="note">Cloud + Gemini AI ecosystem underpins thesis. Analyst consensus remains constructive.</div>
+    </div>
+    <div class="stock-card">
+      <div class="ticker">AMAT</div>
+      <div class="company">Applied Materials</div>
+      <div class="price">~$614</div>
+      <div class="chg pos">▲ +8% (Tue)</div>
+      <div class="note">Citi raised price target. Semiconductor equipment demand remains robust amid AI buildout.</div>
+    </div>
+  </div>
+
+  <!-- Sector Performance -->
+  <div class="section-title">YTD Sector Performance (S&amp;P 500)</div>
+  <div class="sector-list">
+    <div class="sector-row">
+      <div class="sector-label">Energy</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:80%; background:#22c55e;"></div></div>
+      <div class="sector-pct pos">+29.2%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Information Technology</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:47%; background:#22c55e;"></div></div>
+      <div class="sector-pct pos">+17.1%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Financials</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:35%; background:#22c55e;"></div></div>
+      <div class="sector-pct pos">+12.8%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Industrials</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:28%; background:#22c55e;"></div></div>
+      <div class="sector-pct pos">+10.3%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Health Care</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:16%; background:#f59e0b;"></div></div>
+      <div class="sector-pct neu">+5.9%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Consumer Discretionary</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:12%; background:#f59e0b;"></div></div>
+      <div class="sector-pct neu">+4.2%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Utilities</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:8%; background:#ef4444;"></div></div>
+      <div class="sector-pct neg">+2.7%</div>
+    </div>
+    <div class="sector-row">
+      <div class="sector-label">Real Estate</div>
+      <div class="sector-bar-track"><div class="sector-bar-fill" style="width:5%; background:#ef4444;"></div></div>
+      <div class="sector-pct neg">+1.5%</div>
+    </div>
+  </div>
+  <p style="font-size:11px; color:#334155; margin-top:10px;">Note: YTD figures approximate; Energy benefited from Iran-related supply premium earlier in 2026 before the peace deal compressed oil further.</p>
+
+  <!-- Next Week Focus -->
+  <div class="section-title">📅 Next Week Focus — June 23–27, 2026</div>
+  <div class="nw-grid">
+
+    <div class="nw-card">
+      <div class="nw-title">📊 Key Economic Data</div>
+      <div class="nw-item">
+        <div class="nw-dot amber"></div>
+        <div class="nw-text"><strong>May PCE (Fri June 27)</strong> — The Fed's preferred inflation gauge. With dot plot now hawkish, a hot print could accelerate hike timeline.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot blue"></div>
+        <div class="nw-text"><strong>Q1 GDP Final Revision</strong> — Consensus expects no major change. But any downward revision could soften rate-hike bets.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot green"></div>
+        <div class="nw-text"><strong>Consumer Confidence &amp; Durable Goods</strong> — Post-Iran deal sentiment + manufacturing data in focus.</div>
+      </div>
+    </div>
+
+    <div class="nw-card">
+      <div class="nw-title">💼 Key Earnings</div>
+      <div class="nw-item">
+        <div class="nw-dot blue"></div>
+        <div class="nw-text"><strong>Micron (MU)</strong> — Bellwether for AI memory demand. Guidance on HBM3E will move semis broadly.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot blue"></div>
+        <div class="nw-text"><strong>FedEx (FDX)</strong> — Macro/logistics read-through. Guidance on shipping volumes signals consumer/business health.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot blue"></div>
+        <div class="nw-text"><strong>Broadcom (AVGO)</strong> — Custom AI chip demand and VMware integration update. One of the strongest AI infrastructure plays.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot blue"></div>
+        <div class="nw-text"><strong>CrowdStrike (CRWD)</strong> — Cybersecurity demand recovery check post-2025 outage.</div>
+      </div>
+    </div>
+
+    <div class="nw-card">
+      <div class="nw-title">🔭 Themes to Watch</div>
+      <div class="nw-item">
+        <div class="nw-dot red"></div>
+        <div class="nw-text"><strong>Rate Hike Re-pricing</strong> — With Oct 2026 hike priced in, any stronger-than-expected data could push markets to price November or earlier. Watch 2Y yields.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot amber"></div>
+        <div class="nw-text"><strong>Oil Price Stability</strong> — Brent at ~$83 post-Iran deal. Watch whether OPEC+ adjusts production targets in response.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot green"></div>
+        <div class="nw-text"><strong>AI Infrastructure Spend</strong> — Capex guidance from Micron and Broadcom will shape the AI buildout narrative into Q3.</div>
+      </div>
+    </div>
+
+    <div class="nw-card">
+      <div class="nw-title">⚠️ Key Risks</div>
+      <div class="nw-item">
+        <div class="nw-dot red"></div>
+        <div class="nw-text"><strong>Hot PCE / CPI follow-through</strong> — Sticky inflation prints would validate the Fed's hawkish pivot and could weigh on growth stocks.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot red"></div>
+        <div class="nw-text"><strong>Iran deal fragility</strong> — Peace is preliminary. Any breakdown could reverse oil's decline and trigger risk-off across equities.</div>
+      </div>
+      <div class="nw-item">
+        <div class="nw-dot amber"></div>
+        <div class="nw-text"><strong>Market concentration risk</strong> — Leadership remains narrow (AI + energy). A rotation or correction in either could hit indices hard.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Watchlist -->
+  <div class="section-title">📋 Your Watchlist — Categorized</div>
+
+  <!-- Category: AI Semiconductor Core -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#6366f1;"></span>
+    AI Semiconductor Core
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">MRVL</span></div>
+      <div class="wl-col-name">Marvell Technology</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">+228%</span></div>
+      <div class="wl-col-note">Custom AI ASICs + networking. One of this year's biggest winners. KeyBanc raised PT this week.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">MU</span></div>
+      <div class="wl-col-name">Micron Technology</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">Strong</span></div>
+      <div class="wl-col-note">HBM memory for AI GPUs. Earnings next week — most important catalyst for semis.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">DRAM</span></div>
+      <div class="wl-col-name">Roundhill Memory ETF</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">↑ with sector</span></div>
+      <div class="wl-col-note">ETF launched Apr 2026. Basket exposure to global memory names (MU, SK Hynix, Samsung). Less volatile way to play memory.</div>
+    </div>
+  </div>
+
+  <!-- Category: Semiconductor Packaging -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#8b5cf6;"></span>
+    Semiconductor Packaging &amp; Supply Chain
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD / Note</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">AMKR</span></div>
+      <div class="wl-col-name">Amkor Technology</div>
+      <div class="wl-col-price">$86.55</div>
+      <div class="wl-col-ytd"><span class="pos">Near 52w high</span></div>
+      <div class="wl-col-note">Advanced chip packaging for AI chips. 52-week range $19–$96.68. Near top of range — watch for breakout or pullback.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">ASX</span></div>
+      <div class="wl-col-name">ASE Technology (ADR)</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">Strong Q2</span></div>
+      <div class="wl-col-note">World's largest chip packaging &amp; testing firm. Q2 2026 revenue ¥175.46B, net margin 8.2%. Rides AI packaging demand alongside AMKR.</div>
+    </div>
+  </div>
+
+  <!-- Category: Photonics / AI Optical Networking -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#06b6d4;"></span>
+    Photonics &amp; AI Optical Networking
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">AAOI</span></div>
+      <div class="wl-col-name">Applied Optoelectronics</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">+390% YTD 🔥</span></div>
+      <div class="wl-col-note">Fiber optic transceivers for AI data centers. One of the hottest names of 2026. High momentum but also high risk of mean reversion.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">SIVE</span></div>
+      <div class="wl-col-name">Sivers Semiconductors</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="neu">Small-cap</span></div>
+      <div class="wl-col-note">Listed on Stockholm Nasdaq (OMXSTO:SIVE). Wireless &amp; photonics chips. High-risk, small-cap play. OTC in the US — check liquidity before trading.</div>
+    </div>
+  </div>
+
+  <!-- Category: Legacy Semiconductor Turnaround -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#f59e0b;"></span>
+    Legacy Semiconductor — Turnaround
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">INTC</span></div>
+      <div class="wl-col-name">Intel Corp (listed as INTEL)</div>
+      <div class="wl-col-price">$134.16</div>
+      <div class="wl-col-ytd"><span class="pos">+217% YTD 🔥</span></div>
+      <div class="wl-col-note">Hit all-time high Jun 18. Foundry turnaround + AI PC cycle + 18A process node in focus. After a 217% run, valuation stretched — consider trimming if this was a trade.</div>
+    </div>
+  </div>
+
+  <!-- Category: Big Tech Mega Cap -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#3b82f6;"></span>
+    Big Tech / Mega Cap
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">MSFT</span></div>
+      <div class="wl-col-name">Microsoft</div>
+      <div class="wl-col-price">~$413</div>
+      <div class="wl-col-ytd"><span class="pos">+17% YTD</span></div>
+      <div class="wl-col-note">Azure AI + Copilot revenue acceleration. Highest-quality AI software play. Strong Buy consensus.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">AAPL</span></div>
+      <div class="wl-col-name">Apple</div>
+      <div class="wl-col-price">~$299</div>
+      <div class="wl-col-ytd"><span class="pos">Positive</span></div>
+      <div class="wl-col-note">Approaching $300 milestone. AI integration into iOS (Apple Intelligence) + Services growth. Steady compounder.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">GOOG</span></div>
+      <div class="wl-col-name">Alphabet</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="pos">Positive</span></div>
+      <div class="wl-col-note">Gemini AI + Google Cloud underpin the story. Search resilience despite AI competition. Constructive consensus.</div>
+    </div>
+  </div>
+
+  <!-- Category: Disruptive / High-Beta -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#ec4899;"></span>
+    Disruptive / High-Beta Tech
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD / Trend</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">SPCX</span></div>
+      <div class="wl-col-name">SpaceX</div>
+      <div class="wl-col-price">~$202</div>
+      <div class="wl-col-ytd"><span class="pos">IPO Jun 12 🚀</span></div>
+      <div class="wl-col-note">IPO'd at $135, first-day close $161 (+19%), now ~$202. Market cap ~$2.6T — already larger than Tesla. Very early stage as a public company. High excitement, thin track record.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">TSLA</span></div>
+      <div class="wl-col-name">Tesla</div>
+      <div class="wl-col-price">~$405</div>
+      <div class="wl-col-ytd"><span class="neg">−8.7% (30d)</span></div>
+      <div class="wl-col-note">SpaceX IPO sucked some air from Tesla narrative. Down ~8.7% past month. Optimus robotics + FSD expansion are potential re-rating catalysts. Watch closely.</div>
+    </div>
+  </div>
+
+  <!-- Category: Telecom / Infrastructure -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#64748b;"></span>
+    Telecom / Infrastructure
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">NOK</span></div>
+      <div class="wl-col-name">Nokia</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="neu">Value play</span></div>
+      <div class="wl-col-note">Network equipment (5G, 6G). Low-growth but defensive. Potential beneficiary of telecom infrastructure buildout for AI connectivity. Dividend payer.</div>
+    </div>
+  </div>
+
+  <!-- Category: Alternative / Thematic -->
+  <div class="wl-category-header">
+    <span class="wl-cat-dot" style="background:#10b981;"></span>
+    Alternative &amp; Thematic
+  </div>
+  <div class="wl-table">
+    <div class="wl-row wl-header-row">
+      <div class="wl-col-ticker">Ticker</div>
+      <div class="wl-col-name">Name</div>
+      <div class="wl-col-price">Price</div>
+      <div class="wl-col-ytd">YTD</div>
+      <div class="wl-col-note">Context</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">PWRL</span></div>
+      <div class="wl-col-name">Powerlaw Corp</div>
+      <div class="wl-col-price">—</div>
+      <div class="wl-col-ytd"><span class="neu">Novel</span></div>
+      <div class="wl-col-note">Publicly-listed fund investing in private tech (AI, aerospace, SaaS). Unique structure — exposure to pre-IPO names. Treat like a closed-end fund; check NAV vs price premium.</div>
+    </div>
+    <div class="wl-row">
+      <div class="wl-col-ticker"><span class="wl-ticker">CRCL</span></div>
+      <div class="wl-col-name">Circle Internet Group (CIRCLE)</div>
+      <div class="wl-col-price">~$80</div>
+      <div class="wl-col-ytd"><span class="pos">↑ from $31 IPO</span></div>
+      <div class="wl-col-note">USDC stablecoin issuer. Revenue +64% YoY; USDC circulation $75B (+72%). Pure crypto infrastructure play — uncorrelated to most of your watchlist. Stablecoin legislation could be a catalyst.</div>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="section-title">💡 Recommendations &amp; Observations</div>
+
+  <div class="rec-grid">
+    <div class="rec-card rec-green">
+      <div class="rec-label">Strong Conviction</div>
+      <div class="rec-item">
+        <span class="rec-ticker">MU</span>
+        <span class="rec-text">Micron earnings next week are the most important near-term catalyst for your entire watchlist. HBM memory is supply-constrained. A beat + strong guidance could lift MRVL, DRAM, AMKR, ASX in sympathy.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">MRVL</span>
+        <span class="rec-text">+228% YTD but still has runway. Custom AI ASICs are the next frontier beyond NVIDIA GPUs. If Broadcom (AVGO) earnings next week are strong, MRVL re-rates further.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">AAOI</span>
+        <span class="rec-text">+390% YTD. Optical networking is the AI infrastructure bottleneck everyone underestimates. Momentum is extreme — consider trailing stop if you're in profit.</span>
+      </div>
+    </div>
+
+    <div class="rec-card rec-amber">
+      <div class="rec-label">Watch / Re-evaluate</div>
+      <div class="rec-item">
+        <span class="rec-ticker">INTC</span>
+        <span class="rec-text">Hit all-time high this week after +217% YTD. If this was a turnaround trade, consider taking partial profits. Risk: profit-taking after a massive run. Bull case: Intel 18A foundry wins + AI PC cycle still early.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">TSLA</span>
+        <span class="rec-text">Down ~8.7% in the past month while SPCX stole the Elon narrative. Watch for Optimus robotics update or FSD regulatory approval as re-rating triggers. Don't add until momentum stabilizes.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">SPCX</span>
+        <span class="rec-text">Brand new public company — only 8 days old. $2.6T market cap with thin public track record. Exciting but speculative. Consider waiting for 1–2 quarterly earnings reports before sizing up.</span>
+      </div>
+    </div>
+
+    <div class="rec-card rec-blue">
+      <div class="rec-label">Portfolio Observations</div>
+      <div class="rec-item">
+        <span class="rec-ticker">⚠️ Concentration</span>
+        <span class="rec-text">Your watchlist is heavily AI-semiconductor concentrated (MU, MRVL, DRAM, AMKR, ASX, AAOI, SIVE, INTC). That's 8 of 16 names. A sector rotation out of semis would hit hard simultaneously.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">🔍 Gap: NVDA</span>
+        <span class="rec-text">You're playing the entire AI chip supply chain but don't hold NVIDIA — the sector's anchor. Consider adding NVDA or the DRAM ETF provides indirect exposure through sector beta.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">💡 CRCL</span>
+        <span class="rec-text">Circle Internet (CRCL) is your only truly uncorrelated position. Stablecoin legislation (GENIUS Act momentum) could be a major catalyst. Worth monitoring actively.</span>
+      </div>
+    </div>
+
+    <div class="rec-card rec-purple">
+      <div class="rec-label">Names to Consider Adding</div>
+      <div class="rec-item">
+        <span class="rec-ticker">AVGO</span>
+        <span class="rec-text">Broadcom — custom AI chip + VMware. Reports earnings next week. Complements MRVL in your portfolio and is the other major custom AI ASIC player.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">AMAT</span>
+        <span class="rec-text">Applied Materials jumped +8% this week on a Citi upgrade. Semiconductor equipment is the picks-and-shovels play for the AI buildout supercycle.</span>
+      </div>
+      <div class="rec-item">
+        <span class="rec-ticker">ARM</span>
+        <span class="rec-text">Arm Holdings — chip architecture royalties from nearly every mobile and AI chip. Royalties grow with every MRVL/INTC/AAPL design win. Lower volatility AI semi exposure.</span>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+  <footer>
+    Data sourced from TheStreet, CNBC, Seeking Alpha, Advisor Perspectives, Intellectia AI, S&amp;P Global, Charles Schwab, Goldman Sachs AM, JP Morgan Research, TipRanks, StockAnalysis, GuruFocus &nbsp;·&nbsp; June 20, 2026<br />
+    <em>This recap is for informational purposes only and does not constitute financial advice.</em>
+  </footer>
+
+</div>
+</body>
+</html>
