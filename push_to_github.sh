@@ -15,7 +15,7 @@ if [ -z "$GH_TOKEN" ]; then
   echo "✗ GH_TOKEN not set. Add it to ~/Desktop/Claude_Projects/MarketRecaps/.env"
   exit 1
 fi
-GH_USER="importal-t"
+GH_USER="immortal-tt"
 REPO="weekly-market-recap"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 

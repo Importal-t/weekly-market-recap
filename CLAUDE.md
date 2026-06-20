@@ -14,7 +14,7 @@ A static site that publishes a weekly US stock market recap (and occasional sect
 
 ## Auth / secrets
 
-`GH_TOKEN` (a GitHub PAT with `repo` scope) is read from `.env` (gitignored) — never hardcode it in scripts or commit it. Both shell scripts auto-source `.env` if `GH_TOKEN` isn't already in the environment. Target repo is `importal-t/weekly-market-recap`, published at `importal-t.github.io/weekly-market-recap`.
+`GH_TOKEN` (a GitHub PAT with `repo` scope) is read from `.env` (gitignored) — never hardcode it in scripts or commit it. Both shell scripts auto-source `.env` if `GH_TOKEN` isn't already in the environment. Target repo is `immortal-tt/weekly-market-recap`, published at `immortal-tt.github.io/weekly-market-recap`.
 
 ## Working conventions for new pages
 
